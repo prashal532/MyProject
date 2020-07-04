@@ -1,0 +1,75 @@
+package com.BrowserAutomation;
+
+import java.util.concurrent.TimeUnit;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.interactions.Actions;
+
+public class OrangeHRM_Assignment2 {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		WebDriver driver;
+		System.setProperty("webdriver.chrome.driver", "./DriverFiles/Chromedriver.exe");
+		driver=new ChromeDriver();
+		String ExpectedURL="http://127.0.0.1/orangehrm-4.2.0.1/symfony/web/index.php/auth/login";
+		driver.get(ExpectedURL);
+		driver.manage().window().maximize();
+		driver.manage().timeouts().implicitlyWait(10,TimeUnit.SECONDS);
+		String ActualURL=driver.getCurrentUrl();
+		if (ActualURL.equals(ExpectedURL))
+		{
+			System.out.println("Landing Page Verified-PASS");
+			WebElement UserName=driver.findElement(By.id("txtUsername"));
+			UserName.sendKeys("chennp01");
+			Actions action=new Actions(driver);
+			action.sendKeys(Keys.TAB).perform();
+			action.sendKeys("04e91A0532@");
+			action.sendKeys(Keys.ENTER).perform();
+			WebElement HomePageValidation=driver.findElement(By.id("welcome"));
+			String HomePageValidationText=HomePageValidation.getText();
+			System.out.println("Home Page Validation Text is "+HomePageValidationText);
+			if (HomePageValidationText.contains("Admin"))
+			{
+				System.out.println("Home Page Validations PASS");
+				WebElement PimMenu=driver.findElement(By.id("menu_pim_viewPimModule"));
+				action.moveToElement(PimMenu).perform();
+				WebElement AddEmployee=driver.findElement(By.linkText("Add Employee"));
+				AddEmployee.click();
+				String FirstName="Pradeep";
+				String LastName="Chennu";
+				WebElement Add_Employee_Validation=driver.findElement(By.xpath("//*[@id=\"content\"]/div/div[1]/h1"));
+				String Actual_Add_Employee_Validation=Add_Employee_Validation.getText();
+				System.out.println("Add Employee Page validation String is :"+Actual_Add_Employee_Validation);
+				WebElement First_Name=driver.findElement(By.id("firstName"));
+				First_Name.sendKeys(FirstName);
+				WebElement Last_Name=driver.findElement(By.id("lastName"));
+				Last_Name.sendKeys(LastName);
+				WebElement Employee_ID=driver.findElement(By.id("employeeId"));
+				String EmployeeID=Employee_ID.getAttribute("value");
+				System.out.println("Employee ID during Creastion: "+EmployeeID);
+				WebElement Save_Btn= driver.findElement(By.id("btnSave"));
+				Save_Btn.click();
+				WebElement Personal_Details_Page= driver.findElement(By.xpath("//*[@id=\"profile-pic\"]"));
+				String Full_Name=Personal_Details_Page.getText();
+				System.out.println("The string is "+Full_Name);
+				
+				
+			}
+			else
+			{
+				System.out.println("Home Page Validation FAIL");
+			}
+			
+		}
+		else
+		{
+			System.out.println("Landing Page FAIL");
+		}
+	}
+
+}
